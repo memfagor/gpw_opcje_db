@@ -2,10 +2,10 @@
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from re import compile
 from datetime import datetime
 from datetime import date
 import sqlite3
-import re
 
 
 def main():
@@ -45,9 +45,9 @@ def main():
       opcje[nazwa]['type'] = 'undefined'
         
     opcje[nazwa]['wigp'] = float(nazwa[-4:])
-    opcje[nazwa]['exchange'] = float(walor.find('td', {'class': re.compile('colKurs*')}).contents[0].strip().replace(',', '.'))
-    opcje[nazwa]['change'] = float(walor.find('td', {'class': re.compile('colZmiana*')}).contents[0].strip().replace(',', '.'))
-    opcje[nazwa]['pchange'] = float(walor.find('td', {'class': re.compile('colZmianaProcentowa*')}).contents[0].strip().replace(',', '.').replace('%', ''))
+    opcje[nazwa]['exchange'] = float(walor.find('td', {'class': compile('colKurs*')}).contents[0].strip().replace(',', '.'))
+    opcje[nazwa]['change'] = float(walor.find('td', {'class': compile('colZmiana*')}).contents[0].strip().replace(',', '.'))
+    opcje[nazwa]['pchange'] = float(walor.find('td', {'class': compile('colZmianaProcentowa*')}).contents[0].strip().replace(',', '.').replace('%', ''))
     opcje[nazwa]['open'] = float(walor.find('td', {'class':'colOtwarcie'}).contents[0].strip().replace(',', '.'))
     opcje[nazwa]['max'] = float(walor.find('td', {'class':'calMaxi'}).contents[0].strip().replace(',', '.'))
     opcje[nazwa]['min'] = float(walor.find('td', {'class':'calMini'}).contents[0].strip().replace(',', '.'))
