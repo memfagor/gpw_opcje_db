@@ -6,15 +6,22 @@ from re import compile
 from datetime import datetime
 from datetime import date
 import sqlite3
-
+import os
 
 def main():
 
     adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
-    db_path = '/home/listonosz/gpw/database/gpw_opcje.db'  
+  
     opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
     opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
   
+    path = os.path.join(os.getcwd(), 'gpw')
+
+    if not os.path.isdir(path):
+
+        os.makedirs(path, mode=0o755)
+
+    db_path = os.path.join(path, 'gpw_opcje.db')
     strona = urlopen(adres_opcje).read()
     walory = BeautifulSoup(strona, 'lxml').findAll('tr')
   
