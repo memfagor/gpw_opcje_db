@@ -15,7 +15,7 @@ def main():
     opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
     opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
   
-    path = os.path.join(os.getcwd(), 'database')
+    path = os.path.join('/'.join(os.path.abspath(__file__).split('/')[:-1]), 'database')
 
     if not os.path.isdir(path):
 
