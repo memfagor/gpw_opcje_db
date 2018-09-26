@@ -16,8 +16,7 @@ def main():
     opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
   
     strona = urlopen(adres_opcje).read()
-    BSobj = BeautifulSoup(strona, "lxml")
-    walory = BSobj.findAll('tr')
+    walory = BeautifulSoup(strona, 'lxml').findAll('tr')
   
     opcje = {}
   
