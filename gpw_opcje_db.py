@@ -15,13 +15,12 @@ def main():
     opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
     opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
   
-    path = os.path.join('/'.join(os.path.abspath(__file__).split('/')[:-1]), 'database')
+    path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
-    if not os.path.isdir(path):
+    if not os.path.isdir(os.path.join(path, 'database')):
 
-        os.makedirs(path, mode=0o755)
+        os.makedirs(os.path.join(path, 'database'), mode=0o755)
 
-    db_path = os.path.join(path, 'gpw_opcje.db')
     strona = urlopen(adres_opcje).read()
     walory = BeautifulSoup(strona, 'lxml').findAll('tr')
   
@@ -63,7 +62,7 @@ def main():
         opcje[nazwa]['term'] = datetime.strptime(date_str, "%Y-%m-%d").isoformat()
         opcje[nazwa]['tstamp'] = datetime.now().isoformat()
   
-    db = sqlite3.connect(db_path)
+    db = sqlite3.connect(os.path.join(path, 'database/gpw_opcje.db'))
     cur = db.cursor()
 
     for key, value in opcje.items():
