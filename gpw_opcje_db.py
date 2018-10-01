@@ -10,6 +10,8 @@ import os
 
 
 
+path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
+
 adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
   
 opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
@@ -63,21 +65,19 @@ def GetOptions(web_page):
 
 def main():
     
-    path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
-    
     log_path = os.path.join(path, 'log.txt')
 
     if not os.path.isfile(log_path):
         
         plik = open(log_path, 'w')
-        plik.write(datetime.now().isoformat() + 'File "log.txt" does not exist - creating log.txt file.\n')
+        plik.write(datetime.now().isoformat() + ' - File "log.txt" does not exist - creating log.txt file.\n')
         plik.close()
         
     if not os.path.isdir(os.path.join(path, 'database')):
 
         os.makedirs(os.path.join(path, 'database'), mode=0o755)
         plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + 'Folder "database" does not exist - creating "database" folder.\n')
+        plik.write(datetime.now().isoformat() + ' - Folder "database" does not exist - creating "database" folder.\n')
         plik.close()
 
     try:
@@ -87,7 +87,7 @@ def main():
     except:
         
         plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + 'Unable to connect with webpage - exiting.\n')
+        plik.write(datetime.now().isoformat() + ' - Unable to connect with webpage - exiting.\n')
         plik.close()
         raise SystemExit()
     
@@ -98,7 +98,9 @@ def main():
     except:
         
         plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + 'Unable to connect with database - exiting.\n')
+        plik.write(datetime.now().isoformat() + ' - Unable to connect with database - exiting.\n')
+        plik.close()
+        raise SystemExit()        
         
     cur = db.cursor()
 
