@@ -8,41 +8,25 @@ from datetime import date
 import sqlite3
 import os
 
-def main():
 
-    adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
+
+adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
   
-    opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
-    opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
-  
-    path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
+opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
+opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
+
+def GetOptions(web_page):
     
-    log_path = os.path.join(path, 'log.txt')
-
-    if not os.path.isfile(log_path):
-        
-        plik = open(log_path, 'w')
-        plik.write(datetime.now().isoformat() + 'File "log.txt" does not exist - creating log.txt file')
-        plik.close()
-        
-    if not os.path.isdir(os.path.join(path, 'database')):
-
-        os.makedirs(os.path.join(path, 'database'), mode=0o755)
-        plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + 'Folder "database" does not exist - creating "database" folder')
-        plik.close()
-
-    strona = urlopen(adres_opcje).read()
-    walory = BeautifulSoup(strona, 'lxml').findAll('tr')
+    walory = BeautifulSoup(web_page.read(), 'lxml').findAll('tr')
   
     opcje = {}
   
     for walor in walory:
-  
+        
         pole_nazwa = walor.find('td', {'class':'colWalor textNowrap'})
     
         if pole_nazwa is None:
-
+            
             continue
     
         nazwa = pole_nazwa.contents[0].strip().upper()
@@ -71,12 +55,54 @@ def main():
         opcje[nazwa]['date'] = datetime.strptime(date_str, "%Y.%d.%m %H:%M").isoformat()
         date_str = walor.find('td', {'class':'colTermin'}).contents[0].strip()
         opcje[nazwa]['term'] = datetime.strptime(date_str, "%Y-%m-%d").isoformat()
-        opcje[nazwa]['tstamp'] = datetime.now().isoformat()
-  
-    db = sqlite3.connect(os.path.join(path, 'database/gpw_opcje.db'))
+        opcje[nazwa]['tstamp'] = datetime.now().isoformat()    
+
+    return opcje
+
+
+
+def main():
+    
+    path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
+    
+    log_path = os.path.join(path, 'log.txt')
+
+    if not os.path.isfile(log_path):
+        
+        plik = open(log_path, 'w')
+        plik.write(datetime.now().isoformat() + 'File "log.txt" does not exist - creating log.txt file.\n')
+        plik.close()
+        
+    if not os.path.isdir(os.path.join(path, 'database')):
+
+        os.makedirs(os.path.join(path, 'database'), mode=0o755)
+        plik = open(log_path, 'a')
+        plik.write(datetime.now().isoformat() + 'Folder "database" does not exist - creating "database" folder.\n')
+        plik.close()
+
+    try:
+        
+        strona = urlopen(adres_opcje)
+        
+    except:
+        
+        plik = open(log_path, 'a')
+        plik.write(datetime.now().isoformat() + 'Unable to connect with webpage - exiting.\n')
+        plik.close()
+        raise SystemExit()
+    
+    try:
+        
+        db = sqlite3.connect(os.path.join(path, 'database/gpw_opcje.db'))
+        
+    except:
+        
+        plik = open(log_path, 'a')
+        plik.write(datetime.now().isoformat() + 'Unable to connect with database - exiting.\n')
+        
     cur = db.cursor()
 
-    for key, value in opcje.items():
+    for key, value in GetOptions(strona).items():
   
         cols = value.keys()
         vals = value.values()
