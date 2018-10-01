@@ -16,10 +16,21 @@ def main():
     opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
   
     path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
+    
+    log_path = os.path.join(path, 'log.txt')
 
+    if not os.path.isfile(log_path):
+        
+        plik = open(log_path, 'w')
+        plik.write(datetime.now().isoformat() + 'File "log.txt" does not exist - creating log.txt file')
+        plik.close()
+        
     if not os.path.isdir(os.path.join(path, 'database')):
 
         os.makedirs(os.path.join(path, 'database'), mode=0o755)
+        plik = open(log_path, 'a')
+        plik.write(datetime.now().isoformat() + 'Folder "database" does not exist - creating "database" folder')
+        plik.close()
 
     strona = urlopen(adres_opcje).read()
     walory = BeautifulSoup(strona, 'lxml').findAll('tr')
