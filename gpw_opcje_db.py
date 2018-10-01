@@ -15,13 +15,13 @@ adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
 opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
 opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
 
+
+
 def GetOptions(web_page):
-    
-    walory = BeautifulSoup(web_page.read(), 'lxml').findAll('tr')
   
     opcje = {}
   
-    for walor in walory:
+    for walor in BeautifulSoup(web_page.read(), 'lxml').findAll('tr'):
         
         pole_nazwa = walor.find('td', {'class':'colWalor textNowrap'})
     
