@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from json import loads
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from re import compile
@@ -12,11 +13,7 @@ import os
 
 path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
-adres_opcje = 'https://www.bankier.pl/gielda/notowania/opcje'
-  
-opcje_call = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L')
-opcje_put = ('M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X')
-
+cfg = loads(open(os.path.join(path, 'gpw_opcje_db.conf')).read())
 
 
 def GetOptions(web_page):
@@ -34,11 +31,11 @@ def GetOptions(web_page):
         nazwa = pole_nazwa.contents[0].strip().upper()
         opcje[nazwa] = {}
       
-        if nazwa[4] in opcje_call:
+        if nazwa[4] in cfg['opcje_call']:
       
             opcje[nazwa]['type'] = 'call'
         
-        elif nazwa[4] in opcje_put:
+        elif nazwa[4] in cfg['opcje_put']:
       
             opcje[nazwa]['type'] = 'put'
 
@@ -82,7 +79,7 @@ def main():
 
     try:
         
-        strona = urlopen(adres_opcje)
+        strona = urlopen(cfg['adres_opcje'])
         
     except:
         
@@ -93,7 +90,7 @@ def main():
     
     try:
         
-        db = sqlite3.connect(os.path.join(path, 'database/gpw_opcje.db'))
+        db = sqlite3.connect(os.path.join(path, 'database', cfg['database']))
         
     except:
         
