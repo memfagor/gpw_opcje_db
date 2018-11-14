@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 from json import loads
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -15,6 +16,7 @@ path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
 cfg = loads(open(os.path.join(path, 'gpw_opcje_db.conf')).read())
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
 
 def GetOptions(web_page):
 
@@ -62,41 +64,27 @@ def GetOptions(web_page):
 
 def main():
 
-    log_path = os.path.join(path, 'log.txt')
-
-    if not os.path.isfile(log_path):
-
-        plik = open(log_path, 'w')
-        plik.write(datetime.now().isoformat() + ' - File "log.txt" does not exist - creating log.txt file.\n')
-        plik.close()
-
     if not os.path.isdir(os.path.join(path, 'database')):
 
+        logging.warning('Folder "database" does not exist - creating one.')
         os.makedirs(os.path.join(path, 'database'), mode=0o755)
-        plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + ' - Folder "database" does not exist - creating "database" folder.\n')
-        plik.close()
 
     try:
 
         strona = urlopen(cfg['adres_opcje'])
 
-    except:
+    except Exception as e:
 
-        plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + ' - Unable to connect with webpage - exiting.\n')
-        plik.close()
+        logging.error(e)
         raise SystemExit()
 
     try:
 
         db = sqlite3.connect(os.path.join(path, 'database', cfg['database']))
 
-    except:
+    except Exception as e:
 
-        plik = open(log_path, 'a')
-        plik.write(datetime.now().isoformat() + ' - Unable to connect with database - exiting.\n')
-        plik.close()
+        logging.error(e)
         raise SystemExit()
 
     cur = db.cursor()
