@@ -16,7 +16,7 @@ path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
 cfg = loads(open(os.path.join(path, 'gpw_opcje_db.conf')).read())
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
 
 def GetOptions(web_page):
 
