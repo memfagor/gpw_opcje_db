@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
-from json import loads
+from json import load
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from re import compile
@@ -16,7 +16,7 @@ def GetScriptPath():
 
 def GetConfig(path, fname):
     with open(os.path.join(path, fname), 'r') as config_file:
-        config = loads(config_file.read())
+        config = load(config_file)
     return config
 
 def GetOptions(web_page):
