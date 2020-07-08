@@ -21,6 +21,16 @@ def GetConfig(path, fname):
 
 
 def GetOptions(web_page):
+
+
+    def InputToFloat(inpt):
+        inpt = inpt.strip()
+        inpt = inpt.replace(' ', '')
+        inpt = inpt.replace('%', '')
+        inpt = inpt.replace(',', '.')
+        return float(inpt)
+
+
     opcje = {}
     for walor in BeautifulSoup(web_page.read(), 'lxml').findAll('tr'):
         pole_nazwa = walor.find('td', {'class':'colWalor textNowrap'})
@@ -35,12 +45,12 @@ def GetOptions(web_page):
         else:
             opcje[nazwa]['type'] = 'undefined'
         opcje[nazwa]['wigp'] = float(nazwa[-4:])
-        opcje[nazwa]['exchange'] = float(walor.find('td', {'class': compile('colKurs*')}).contents[0].strip().replace(',', '.'))
-        opcje[nazwa]['change'] = float(walor.find('td', {'class': compile('colZmiana*')}).contents[0].strip().replace(',', '.'))
-        opcje[nazwa]['pchange'] = float(walor.find('td', {'class': compile('colZmianaProcentowa*')}).contents[0].strip().replace(',', '.').replace('%', ''))
-        opcje[nazwa]['open'] = float(walor.find('td', {'class':'colOtwarcie'}).contents[0].strip().replace(',', '.'))
-        opcje[nazwa]['max'] = float(walor.find('td', {'class':'calMaxi'}).contents[0].strip().replace(',', '.'))
-        opcje[nazwa]['min'] = float(walor.find('td', {'class':'calMini'}).contents[0].strip().replace(',', '.'))
+        opcje[nazwa]['exchange'] = InputToFloat(walor.find('td', {'class': compile('colKurs*')}).contents[0])
+        opcje[nazwa]['change'] = InputToFloat(walor.find('td', {'class': compile('colZmiana*')}).contents[0])
+        opcje[nazwa]['pchange'] = InputToFloat(walor.find('td', {'class': compile('colZmianaProcentowa*')}).contents[0])
+        opcje[nazwa]['open'] = InputToFloat(walor.find('td', {'class':'colOtwarcie'}).contents[0])
+        opcje[nazwa]['max'] = InputToFloat(walor.find('td', {'class':'calMaxi'}).contents[0])
+        opcje[nazwa]['min'] = InputToFloat(walor.find('td', {'class':'calMini'}).contents[0])
         date_str = str(date.today().year) + '.' + walor.find('td', {'class':'colAktualizacja'}).contents[0].strip()
         opcje[nazwa]['date'] = datetime.strptime(
                 date_str, "%Y.%d.%m %H:%M").isoformat()
