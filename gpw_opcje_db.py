@@ -42,6 +42,10 @@ def GetOptions(web_page, config):
         return opt_type
 
 
+    def ISODate(date_str, format_str):
+        return datetime.strptime(date_str, format_str).isoformat()
+
+
     opcje = {}
     for walor in BeautifulSoup(web_page.read(), 'lxml').findAll('tr'):
         pole_nazwa = walor.find('td', {'class':'colWalor textNowrap'})
@@ -58,11 +62,9 @@ def GetOptions(web_page, config):
         opcje[nazwa]['max'] = InputToFloat(walor.find('td', {'class':'calMaxi'}).contents[0])
         opcje[nazwa]['min'] = InputToFloat(walor.find('td', {'class':'calMini'}).contents[0])
         date_str = str(date.today().year) + '.' + walor.find('td', {'class':'colAktualizacja'}).contents[0].strip()
-        opcje[nazwa]['date'] = datetime.strptime(
-                date_str, "%Y.%d.%m %H:%M").isoformat()
+        opcje[nazwa]['date'] = ISODate(date_str, "%Y.%d.%m %H:%M")
         date_str = walor.find('td', {'class':'colTermin'}).contents[0].strip()
-        opcje[nazwa]['term'] = datetime.strptime(
-                date_str, "%Y-%m-%d").isoformat()
+        opcje[nazwa]['term'] = ISODate(date_str, "%Y-%m-%d")
         opcje[nazwa]['tstamp'] = datetime.now().isoformat()
     return opcje
 
