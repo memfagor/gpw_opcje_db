@@ -11,9 +11,8 @@ import sqlite3
 import os
 
 
-
-path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
-
+def GetScriptPath():
+    return '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
 def GetConfig(path, fname):
     with open(os.path.join(path, fname)) as config_file:
@@ -65,7 +64,7 @@ def GetOptions(web_page):
 
 
 def main():
-
+    path = GetScriptPath()
     cfg = GetConfig(path, 'gpw_opcje_db.conf')
     logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
 
