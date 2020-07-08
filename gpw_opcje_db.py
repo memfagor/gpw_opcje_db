@@ -20,7 +20,7 @@ def GetConfig(path, fname):
     return config
 
 
-def GetOptions(web_page):
+def GetOptions(web_page, config):
 
 
     def InputToFloat(inpt):
@@ -39,9 +39,9 @@ def GetOptions(web_page):
             continue
         nazwa = pole_nazwa.contents[0].strip().upper()
         opcje[nazwa] = {}
-        if nazwa[4] in cfg['opcje_call']:
+        if nazwa[4] in config['opcje_call']:
             opcje[nazwa]['type'] = 'call'
-        elif nazwa[4] in cfg['opcje_put']:
+        elif nazwa[4] in config['opcje_put']:
             opcje[nazwa]['type'] = 'put'
         else:
             opcje[nazwa]['type'] = 'undefined'
@@ -83,7 +83,7 @@ def main():
         logging.error(e)
         raise SystemExit()
     cur = db.cursor()
-    for key, value in GetOptions(strona).items():
+    for key, value in GetOptions(strona, cfg).items():
         cols = value.keys()
         vals = value.values()
         query = "CREATE TABLE IF NOT EXISTS {0} (type TEXT, wigp REAL," \
