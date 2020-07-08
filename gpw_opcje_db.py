@@ -15,7 +15,7 @@ def GetScriptPath():
     return '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
 def GetConfig(path, fname):
-    with open(os.path.join(path, fname)) as config_file:
+    with open(os.path.join(path, fname), 'r') as config_file:
         config = loads(config_file.read())
     return config
 
