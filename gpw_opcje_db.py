@@ -26,6 +26,7 @@ def GetOptions(web_page):
     def InputToFloat(inpt):
         inpt = inpt.strip()
         inpt = inpt.replace(' ', '')
+        inpt = inpt.replace(u'\xa0', u'')
         inpt = inpt.replace('%', '')
         inpt = inpt.replace(',', '.')
         return float(inpt)
