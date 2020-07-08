@@ -32,6 +32,16 @@ def GetOptions(web_page, config):
         return float(inpt)
 
 
+    def GetOptionType(opt_name, config):
+        if opt_name[4] in config['opcje_call']:
+            opt_type = 'call'
+        elif opt_name[4] in config['opcje_put']:
+            opt_type = 'put'
+        else:
+            opt_type = 'undefined'
+        return opt_type
+
+
     opcje = {}
     for walor in BeautifulSoup(web_page.read(), 'lxml').findAll('tr'):
         pole_nazwa = walor.find('td', {'class':'colWalor textNowrap'})
@@ -39,12 +49,7 @@ def GetOptions(web_page, config):
             continue
         nazwa = pole_nazwa.contents[0].strip().upper()
         opcje[nazwa] = {}
-        if nazwa[4] in config['opcje_call']:
-            opcje[nazwa]['type'] = 'call'
-        elif nazwa[4] in config['opcje_put']:
-            opcje[nazwa]['type'] = 'put'
-        else:
-            opcje[nazwa]['type'] = 'undefined'
+        opcje[nazwa]['type'] = GetOptionType(nazwa, config)
         opcje[nazwa]['wigp'] = float(nazwa[-4:])
         opcje[nazwa]['exchange'] = InputToFloat(walor.find('td', {'class': compile('colKurs*')}).contents[0])
         opcje[nazwa]['change'] = InputToFloat(walor.find('td', {'class': compile('colZmiana*')}).contents[0])
