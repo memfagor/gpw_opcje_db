@@ -14,7 +14,6 @@ import os
 
 path = '/'.join(os.path.abspath(__file__).split('/')[:-1])
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
 
 def GetConfig(path):
     with open(os.path.join(path, 'gpw_opcje_db.conf')) as config_file:
@@ -68,6 +67,7 @@ def GetOptions(web_page):
 def main():
 
     cfg = GetConfig(path)
+    logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=os.path.join(path, cfg['logfile']), level=logging.DEBUG)
 
     if not os.path.isdir(os.path.join(path, 'database')):
 
