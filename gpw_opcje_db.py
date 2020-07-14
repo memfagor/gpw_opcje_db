@@ -41,8 +41,13 @@ def GetOptions(web_page, config):
         return opt_type
 
 
+    def GetTD(obj, pattern):
+        return obj.find('td', {'class': compile(pattern)}) 
+
+
     def GetTDContent(obj, pattern):
-        return obj.find('td', {'class': compile(pattern)}).contents[0].strip()
+        return GetTD(obj, pattern).contents[0].strip()
+
 
     def ISODate(date_str, format_str):
         return datetime.strptime(date_str, format_str).isoformat()
