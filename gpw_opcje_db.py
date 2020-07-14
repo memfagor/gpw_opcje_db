@@ -42,6 +42,9 @@ def GetOptions(web_page, config):
         return opt_type
 
 
+    def GetTDContent(obj, pattern):
+        return obj.find('td', {'class': compile(pattern)}).contents[0].strip()
+
     def ISODate(date_str, format_str):
         return datetime.strptime(date_str, format_str).isoformat()
 
@@ -55,15 +58,15 @@ def GetOptions(web_page, config):
         opcje[nazwa] = {}
         opcje[nazwa]['type'] = GetOptionType(nazwa, config)
         opcje[nazwa]['wigp'] = float(nazwa[-4:])
-        opcje[nazwa]['exchange'] = InputToFloat(walor.find('td', {'class': compile('colKurs*')}).contents[0])
-        opcje[nazwa]['change'] = InputToFloat(walor.find('td', {'class': compile('colZmiana*')}).contents[0])
-        opcje[nazwa]['pchange'] = InputToFloat(walor.find('td', {'class': compile('colZmianaProcentowa*')}).contents[0])
-        opcje[nazwa]['open'] = InputToFloat(walor.find('td', {'class': compile('colOtwarcie*')}).contents[0])
-        opcje[nazwa]['max'] = InputToFloat(walor.find('td', {'class': compile('calMaxi*')}).contents[0])
-        opcje[nazwa]['min'] = InputToFloat(walor.find('td', {'class': compile('calMini*')}).contents[0])
-        date_str = str(date.today().year) + '.' + walor.find('td', {'class': compile('colAktualizacja*')}).contents[0].strip()
+        opcje[nazwa]['exchange'] = InputToFloat(GetTDContent(walor, 'colKurs*'))
+        opcje[nazwa]['change'] = InputToFloat(GetTDContent(walor, 'colZmiana*'))
+        opcje[nazwa]['pchange'] = InputToFloat(GetTDContent(walor, 'colZmianaProcentowa*'))
+        opcje[nazwa]['open'] = InputToFloat(GetTDContent(walor, 'colOtwarcie*'))
+        opcje[nazwa]['max'] = InputToFloat(GetTDContent(walor, 'calMaxi*'))
+        opcje[nazwa]['min'] = InputToFloat(GetTDContent(walor, 'calMini*'))
+        date_str = str(date.today().year) + '.' + GetTDContent(walor, 'colAktualizacja*')
         opcje[nazwa]['date'] = ISODate(date_str, "%Y.%d.%m %H:%M")
-        date_str = walor.find('td', {'class': compile('colTermin*')}).contents[0].strip()
+        date_str = GetTDContent(walor, 'colTermin*')
         opcje[nazwa]['term'] = ISODate(date_str, "%Y-%m-%d")
         opcje[nazwa]['tstamp'] = datetime.now().isoformat()
     return opcje
