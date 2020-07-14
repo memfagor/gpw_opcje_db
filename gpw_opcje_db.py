@@ -42,7 +42,7 @@ def GetOptions(web_page, config):
 
 
     def GetTD(obj, pattern):
-        return obj.find('td', {'class': compile(pattern)}) 
+        return obj.find('td', {'class': compile(pattern)})
 
 
     def GetTDContent(obj, pattern):
