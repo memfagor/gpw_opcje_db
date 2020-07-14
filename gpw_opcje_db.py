@@ -24,7 +24,6 @@ def GetOptions(web_page, config):
 
 
     def InputToFloat(inpt):
-        inpt = inpt.strip()
         inpt = inpt.replace(' ', '')
         inpt = inpt.replace(u'\xa0', u'')
         inpt = inpt.replace('%', '')
